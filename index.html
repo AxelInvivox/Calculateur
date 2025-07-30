@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculateur de Reach - Invivox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #4a4a4a;
+        }
+        header {
+            background-color: #001c54;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        header p {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #001c54;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input, select {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .button-demo, #downloadBtn {
+            background-color: #00a0df;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #e6eef5;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Calculateur de Reach PDS</h1>
+    <p>Estimez le nombre de professionnels de santé atteignables avec Invivox</p>
+</header>
+<main>
+    <div class="container">
+        <h2>Simulez votre Reach</h2>
+        <form id="reachForm">
+            <label for="region">Choisissez une région :</label>
+            <select id="region" name="region" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="France">France</option>
+                <option value="Europe">Europe</option>
+                <option value="US">US</option>
+            </select>
+
+            <label for="specialite">Choisissez une spécialité :</label>
+            <select id="specialite" name="specialite" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="MG">Médecin Généraliste</option>
+                <option value="Infirmier">Infirmier</option>
+                <option value="Dermatologues">Dermatologue</option>
+                <option value="Pharmaciens">Pharmacien</option>
+            </select>
+
+            <label for="societe">Société :</label>
+            <input type="text" id="societe" name="societe" required>
+
+            <label for="email">Email professionnel :</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="poste">Poste :</label>
+            <input type="text" id="poste" name="poste" required>
+
+            <button type="submit" id="downloadBtn">Télécharger le résultat</button>
+        </form>
+
+        <a href="https://calendly.com/adevige-invivox/30min" target="_blank" class="button-demo">Demander une démo</a>
+    </div>
+</main>
+<footer>
+    © 2025 Invivox. Tous droits réservés.
+</footer>
+<script>
+    const data = {
+        France: { MG: 37000, Infirmier: 300000, Dermatologues: 1600, Pharmaciens: 42000 },
+        Europe: { MG: 120000, Infirmier: 700000, Dermatologues: 6600, Pharmaciens: 80000 },
+        US: { MG: 24000, Infirmier: 400000, Dermatologues: 2600, Pharmaciens: 51000 }
+    };
+
+    const form = document.getElementById("reachForm");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const region = form.region.value;
+        const specialite = form.specialite.value;
+        const societe = form.societe.value;
+        const email = form.email.value;
+        const poste = form.poste.value;
+
+        if (!region || !specialite || !societe || !email || !poste) {
+            alert("Merci de remplir tous les champs obligatoires.");
+            return;
+        }
+
+        const reach = data[region][specialite];
+        const message = `Société : ${societe}\nPoste : ${poste}\nEmail : ${email}\n\nReach estimé pour ${specialite} en ${region} : ${reach.toLocaleString()} professionnels.`;
+
+        const blob = new Blob([message], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "resultat_reach.txt";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+</script>
+</body>
+</html>
